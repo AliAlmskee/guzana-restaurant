@@ -1,13 +1,15 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
+
+use App\Http\Controllers\DishController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PhotoController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\PhotoController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\DishController;
-use App\Http\Controllers\OrderController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,18 +21,24 @@ use App\Http\Controllers\OrderController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+    Route::middleware(['auth:sanctum', 'language'])->group(function () {
+        Route::apiResource('categories', CategoryController::class);
+        Route::apiResource('dishes', DishController::class);
+    });
+
+    Route::middleware(['language'])->group(function () {
+        Route::apiResource('categories', CategoryController::class);
+        Route::apiResource('dishes', DishController::class);
+    });
+
+    Route::apiResource('orders', OrderController::class); 
 
 
-Route::apiResource('users', UserController::class);
-Route::apiResource('categories', CategoryController::class);
-Route::apiResource('dishes', DishController::class);
-Route::apiResource('orders', OrderController::class);
 
+    Route::middleware(['admin'])->group(function () {
+        Route::post('/photo/upload', [PhotoController::class, 'upload']);
+        Route::delete('/photo/{filename}', [PhotoController::class, 'delete']);
+    });
 
-
-Route::post('/photo/upload', [PhotoController::class, 'upload']);
-Route::delete('/photo/{filename}', [PhotoController::class, 'delete']);
-Route::get('/photo/{filename}', [PhotoController::class, 'showByName']);
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/photo/{filename}', [PhotoController::class, 'showByName']);

@@ -8,10 +8,6 @@ use App\Http\Resources\UserResource;
 
 class UserController extends Controller
 {
-    public function index()
-    {
-        return UserResource::collection(User::all());
-    }
 
     public function store(UserRequest $request)
     {
@@ -30,9 +26,5 @@ class UserController extends Controller
         return new UserResource($user);
     }
 
-    public function destroy(User $user)
-    {
-        $user->delete();
-        return response()->json(null, 204);
-    }
 }
+    

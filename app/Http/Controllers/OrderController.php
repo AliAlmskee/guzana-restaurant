@@ -2,20 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Order;
 use App\Http\Requests\OrderRequest;
 use App\Http\Resources\OrderResource;
+use App\Models\Order;
+use App\Traits\SendsEmails;
+use Illuminate\Support\Facades\Request;
+
 
 class OrderController extends Controller
 {
-    public function index()
+    use SendsEmails ; 
+    public function index(Request $request)
     {
-        return OrderResource::collection(Order::all());
-    }
+        $status = $request->query('status', 'pending');
+        $orders = Order::where('status', $status)
+        ->paginate($request->query('per_page', 15));     
 
+        return OrderResource::collection($orders)->pagabel;
+    } 
     public function store(OrderRequest $request)
-    {
-        $order = Order::create($request->validated());
+    { 
+        $data = $request->validated();
+        $data['status'] = 'pending';
+        
+        $order = Order::create($data);
+        
         return new OrderResource($order);
     }
 
@@ -35,4 +46,37 @@ class OrderController extends Controller
         $order->delete();
         return response()->json(null, 204);
     }
+
+    public function approveOrder(Order $order)
+    {
+
+        $order->status = 'approved';
+        $order->save();
+    
+        $subject = 'Bestellung genehmigt'; 
+        $body = 'Ihre Bestellung wurde genehmigt.'; 
+        $this->sendEmail($subject, $body, $order->user_email);
+    
+        return response()->json(null, 204);
+    }
+    
+    public function denied(Request $request, Order $order)
+    {
+        $request->validate([
+            'body' => 'required|string',
+            'date' => 'required|date',
+        ]);
+    
+        $order->status = 'denied';
+        $order->save();
+    
+        $subject = 'Bestellung abgelehnt'; 
+        $body = "Ihre Bestellung wurde abgelehnt am {$validate->date}"; 
+        $this->sendEmail($subject, $body, $order->user_email);
+    
+        return response()->json(null, 204);
+    }
+    
+
+
 }
