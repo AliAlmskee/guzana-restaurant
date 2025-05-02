@@ -1,39 +1,36 @@
 <?php
-
 namespace App\Services;
 
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+
 class PhotoService
 {
-    public function upload(UploadedFile $file, string $folder = 'uploads'): string
+    public function upload(UploadedFile $file, string $folder = 'uploads'): array
     {
         $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
-        $file->move(public_path($folder), $filename);
 
-        return $filename; 
+        $destination = public_path($folder);
+        if (!file_exists($destination)) {
+            mkdir($destination, 0755, true);
+        }
+
+        $file->move($destination, $filename);
+
+        return [
+            'url' => url($folder . '/' . $filename),
+            'filename' => $filename,
+        ];
     }
 
-    public function delete(string $filename): bool
+    public function delete(string $filename, string $folder = 'uploads'): bool
     {
-        $path = 'uploads/' . $filename;
-        
-        if (!file_exists(public_path($path))) {
-            throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException('Photo not found');
-        }
-            return unlink($path);
-    }
+        $filePath = public_path($folder . '/' . $filename);
 
-    public function getPhotoByName(string $filename)
-    {
-        $path = 'uploads/' . $filename;
-        
-        if (!file_exists(public_path($path))) {
-            throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException('Photo not found');
+        if (file_exists($filePath)) {
+            return unlink($filePath);
         }
-    
-        return response()->file(public_path($path));
+
+        return false;
     }
 }

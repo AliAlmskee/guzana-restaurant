@@ -6,8 +6,7 @@ use App\Http\Requests\OrderRequest;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use App\Traits\SendsEmails;
-use Illuminate\Support\Facades\Request;
-
+use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
@@ -15,11 +14,11 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $status = $request->query('status', 'pending');
-        $orders = Order::where('status', $status)
-        ->paginate($request->query('per_page', 15));     
-
-        return OrderResource::collection($orders)->pagabel;
-    } 
+    
+        $orders = Order::where('status', $status)->paginate(20); 
+    
+        return OrderResource::collection($orders);
+    }
     public function store(OrderRequest $request)
     { 
         $data = $request->validated();
@@ -49,34 +48,38 @@ class OrderController extends Controller
 
     public function approveOrder(Order $order)
     {
-
+        if ($order->status != 'pending') {
+            return response()->json(
+                ['message' => 'Order is not pending'], 
+                400
+            );
+        }
         $order->status = 'approved';
         $order->save();
     
-        $subject = 'Bestellung genehmigt'; 
-        $body = 'Ihre Bestellung wurde genehmigt.'; 
-        $this->sendEmail($subject, $body, $order->user_email);
-    
-        return response()->json(null, 204);
+        $subject = 'Reservierungsbestätigung – Guzana Restaurant'; 
+        $body = 'vielen Dank für Ihre Reservierung im Guzana Restaurant.
+        Hiermit bestätigen wir Ihnen gerne Ihre Tischreservierung wie folgt: '; 
+         $this->sendEmail($subject, $body, $order->user_email,$order);
+
+         return   response()->json(['message' => 'Order approved successfully'], 200);
     }
     
-    public function denied(Request $request, Order $order)
+    public function denyOrder(Request $request, Order $order)
     {
-        $request->validate([
-            'body' => 'required|string',
-            'date' => 'required|date',
+        $validated = $request->validate([
+            'next_available_date' => 'required|date_format:Y-m-d H:i:s',
         ]);
     
         $order->status = 'denied';
         $order->save();
     
         $subject = 'Bestellung abgelehnt'; 
-        $body = "Ihre Bestellung wurde abgelehnt am {$validate->date}"; 
-        $this->sendEmail($subject, $body, $order->user_email);
+        $body = "Ihre Bestellung wurde abgelehnt. Nächstes verfügbares Datum: {$validated['next_available_date']}"; 
+        $this->sendEmail($subject, $body, $order->user_email,$order);
     
-        return response()->json(null, 204);
+        return response()->json(['message' => 'Order denied successfully'], 200);
     }
-    
 
 
 }

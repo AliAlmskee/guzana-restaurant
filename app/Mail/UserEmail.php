@@ -8,6 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use App\Models\Order;
 
 class UserEmail extends Mailable
 {
@@ -15,19 +16,15 @@ class UserEmail extends Mailable
     
     public $subject;
     public $body;
+    public $order;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
-    public function __construct($subject, $body)
+    public function __construct($subject, $body, Order $order = null)
     {
-        $this->subject = $subject; 
-        $this->body = $body; 
+        $this->subject = $subject;
+        $this->body = $body;
+        $this->order = $order;
     }
 
- 
     public function envelope(): Envelope
     {
         return new Envelope(
@@ -35,21 +32,17 @@ class UserEmail extends Mailable
         );
     }
 
-
     public function content(): Content
     {
         return new Content(
-            text: 'emails.plain',
+            view: 'emails.plain',
             with: [
-                'body' => $this->body, 
+                'body' => $this->body,
+                'order' => $this->order,
             ],
         );
     }
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
+
     public function attachments(): array
     {
         return [];

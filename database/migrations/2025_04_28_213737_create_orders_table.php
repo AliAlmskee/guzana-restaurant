@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id(); 
             $table->string('user_name'); 
             $table->string('user_email'); 
-            $table->date('date');
+            $table->datetime ('date');
+            $table->Integer('number_of_seats');
             $table->string('status')->default('pending');
             $table->timestamps();
         

@@ -22,9 +22,10 @@ class OrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_name' => 'required|string',
-            'user_email' => 'required|string',
-            'date' => 'required|date'
+            'user_name' => 'required|string|max:255',
+            'user_email' => 'required|email|max:255',
+            'date' => 'required|date_format:Y-m-d H:i:s',
+            'number_of_seats' => 'required|integer|min:1|max:16'
         ];
     }
     

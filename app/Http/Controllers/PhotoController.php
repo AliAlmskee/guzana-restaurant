@@ -17,21 +17,21 @@ class PhotoController extends Controller
 
     public function upload(Request $request): JsonResponse
     {
-        $request->validate(rules: [
-            'photo' => 'required|image|mimes:jpg,jpeg,png|max:2048', // 2MB max
+        $request->validate([
+            'photo' => 'required|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $path = $this->photoService->upload($request->file('photo'));
+        $result = $this->photoService->upload($request->file('photo'));
 
         return response()->json([
             'message' => 'Photo uploaded successfully',
-            'path' => $path,
+            'url' => $result['url'],
+            'filename' => $result['filename'],
         ]);
     }
 
-    public function delete($filename): JsonResponse
+    public function delete(string $filename): JsonResponse
     {
-
         $deleted = $this->photoService->delete($filename);
 
         if ($deleted) {
@@ -39,10 +39,5 @@ class PhotoController extends Controller
         }
 
         return response()->json(['message' => 'Photo not found or already deleted'], 404);
-    }
-
-    public function showByName($filename)
-    {
-        return $this->photoService->getPhotoByName($filename);
     }
 }

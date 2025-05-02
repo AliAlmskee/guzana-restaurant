@@ -6,7 +6,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DishController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PhotoController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\ContentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -38,7 +38,20 @@ use Illuminate\Support\Facades\Route;
     Route::middleware(['admin'])->group(function () {
         Route::post('/photo/upload', [PhotoController::class, 'upload']);
         Route::delete('/photo/{filename}', [PhotoController::class, 'delete']);
+        Route::post('/approve-order/{order}', [OrderController::class, 'approveOrder']);
+        Route::post('/deny-order/{order}', [OrderController::class, 'denyOrder']);
+    
     });
 
     Route::post('/login', [AuthController::class, 'login']);
     Route::get('/photo/{filename}', [PhotoController::class, 'showByName']);
+
+
+
+
+    Route::middleware(['language'])->group(function () {
+        Route::get('/about', [ContentController::class, 'about']);
+        Route::get('/menu', [ContentController::class, 'menu']); 
+    });
+
+
