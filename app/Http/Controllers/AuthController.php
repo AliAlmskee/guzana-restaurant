@@ -53,13 +53,25 @@ class AuthController extends Controller
         }
     }
 
-    public function logout(Request $request)
+    public function logout()
     {
-        $request->user()->tokens()->delete();
+        auth('sanctum')->user()->currentAccessToken()->delete();
 
         return response()->json(['message' => 'Logout successful']);
     }
 
+    public function checkAuth()
+    {
+        $user = auth('sanctum')->user();
+        $token = $user->currentAccessToken();
+        
+        return response()->json([
+            'authenticated' => true,
+            'user' => $user->only('id', 'name', 'email', 'role'),
+            'token_expiration' => $token->expires_at,
+            'current_time' => now()->toDateTimeString()
+        ]);
+    }
     public function getAuthenticatedUserId()
     {
         return Auth::id();

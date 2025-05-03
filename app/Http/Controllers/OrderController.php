@@ -7,6 +7,7 @@ use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use App\Traits\SendsEmails;
 use Illuminate\Http\Request;
+use Carbon\Carbon; 
 
 class OrderController extends Controller
 {
@@ -15,8 +16,11 @@ class OrderController extends Controller
     {
         $status = $request->query('status', 'pending');
     
-        $orders = Order::where('status', $status)->paginate(20); 
-    
+        $orders = Order::where('status', $status)
+                      ->where('created_at', '>=', Carbon::now()->subDays(30))
+                      ->orderBy('created_at', 'desc')
+                      ->paginate(20);    
+                      
         return OrderResource::collection($orders);
     }
     public function store(OrderRequest $request)

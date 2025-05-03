@@ -20,7 +20,7 @@ class DishesSeeder extends Seeder
                     'ar' => 'سلطة طازجة مع الجبنة الفيتا والخيار والطماطم',
                     'de' => 'Frischer Salat mit Fetakäse, Gurken und Tomaten'
                 ],
-                'photo' => 'greek-salad.jpg',
+                'photo' => 'http://127.0.0.1:8000/uploads/cbd1f80d-0382-4fa8-8442-9abd172f500f.jpg',
                 'category_id' => 1
             ],
             [
@@ -32,7 +32,7 @@ class DishesSeeder extends Seeder
                     'ar' => 'حساء كريمي مع أنواع مختلفة من الفطر',
                     'de' => 'Cremige Suppe mit verschiedenen Pilzsorten'
                 ],
-                'photo' => 'mushroom-soup.jpg',
+                'photo' => 'http://127.0.0.1:8000/uploads/d6270910-5220-43fe-80bb-a7e849fb0e86.jpg',
                 'category_id' => 1
             ],
 
@@ -46,7 +46,7 @@ class DishesSeeder extends Seeder
                     'ar' => 'ستيك لحم بقري مشوي مع صلصة الفلفل',
                     'de' => 'Gegrilltes Rindfleischsteak mit Pfeffersauce'
                 ],
-                'photo' => 'beef-steak.jpg',
+                'photo' => 'http://127.0.0.1:8000/uploads/3f6c3125-6197-41d6-b032-211db32ad981.jpg',
                 'category_id' => 2
             ],
             [
@@ -58,7 +58,7 @@ class DishesSeeder extends Seeder
                     'ar' => 'سمك السلمون مشوي مع صلصة الليمون',
                     'de' => 'Gegrillter Lachs mit Zitronensauce'
                 ],
-                'photo' => 'salmon-fillet.jpg',
+                'photo' => 'http://127.0.0.1:8000/uploads/0e298c67-8c6a-43d7-a9ff-a65fea39b506.jpg',
                 'category_id' => 2
             ],
 
@@ -72,7 +72,7 @@ class DishesSeeder extends Seeder
                     'ar' => 'تشيز كيك كلاسيكي مع طبقة من التوت',
                     'de' => 'Klassischer Käsekuchen mit Beerenschicht'
                 ],
-                'photo' => 'cheesecake.jpg',
+                'photo' => 'http://127.0.0.1:8000/uploads/409fce42-02df-447e-a1f2-d1b0ac39767b.jpg',
                 'category_id' => 3
             ]
         ];
