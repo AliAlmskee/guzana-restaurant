@@ -41,6 +41,7 @@ use Illuminate\Support\Facades\Route;
         Route::post('/approve-order/{order}', [OrderController::class, 'approveOrder']);
         Route::post('/deny-order/{order}', [OrderController::class, 'denyOrder']);
         Route::post('/logout', [AuthController::class, 'logout']);
+        Route::put('/content/{type}', [ContentController::class, 'updateContent']);
 
     
     });
@@ -54,7 +55,9 @@ use Illuminate\Support\Facades\Route;
 
     Route::middleware(['language'])->group(function () {
         Route::get('/about', [ContentController::class, 'about']);
-        Route::get('/menu', [ContentController::class, 'menu']); 
+        Route::get('/menu', [ContentController::class, 'menu']);
+        
+       
     });
 
-
+ 
