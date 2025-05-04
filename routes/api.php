@@ -20,44 +20,35 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
-    Route::middleware(['auth:sanctum', 'language'])->group(function () {
-        Route::apiResource('categories', CategoryController::class);
-        Route::apiResource('dishes', DishController::class);
-    });
-
     Route::middleware(['language'])->group(function () {
-        Route::apiResource('categories', CategoryController::class);
-        Route::apiResource('dishes', DishController::class);
-    });
+        Route::apiResource('categories', CategoryController::class)->only(['index', 'show']);
+        Route::apiResource('dishes', DishController::class)->only(['index', 'show']);
+        Route::get('/about', [ContentController::class, 'about']);
+        Route::get('/menu', [ContentController::class, 'menu']);
+    }); 
 
 
-    Route::get('just-categories', [CategoryController::class, 'getCategory']);
+  
+
 
     
-    Route::middleware(['admin'])->group(function () {
+    Route::middleware(['auth:sanctum','admin'])->group(function () {
         Route::post('/photo/upload', [PhotoController::class, 'upload']);
         Route::delete('/photo/{filename}', [PhotoController::class, 'delete']);
         Route::post('/approve-order/{order}', [OrderController::class, 'approveOrder']);
         Route::post('/deny-order/{order}', [OrderController::class, 'denyOrder']);
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::put('/content/{type}', [ContentController::class, 'updateContent']);
+        Route::apiResource('categories', CategoryController::class)->only(['destroy', 'update', 'store']);;
+        Route::apiResource('dishes', DishController::class)->only(['destroy', 'update', 'store']);
+        Route::get('/check-auth', [AuthController::class, 'checkAuth']);
 
-    
     });
 
 
     Route::apiResource('orders', OrderController::class); 
     Route::post('/login', [AuthController::class, 'login']);
-    Route::get('/check-auth', [AuthController::class, 'checkAuth']);
+    Route::get('just-categories', [CategoryController::class, 'getCategory']);
 
-
-
-    Route::middleware(['language'])->group(function () {
-        Route::get('/about', [ContentController::class, 'about']);
-        Route::get('/menu', [ContentController::class, 'menu']);
-        
-       
-    });
 
  
