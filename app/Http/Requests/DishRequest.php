@@ -20,7 +20,7 @@ class DishRequest extends FormRequest
             'description' => 'required|array|size:2',
             'description.de' => 'required|string|max:1000',
             'description.ar' => 'required|string|max:1000',
-            'photo' => 'nullable|file|image|max:2048', // 2MB 
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // 2MB 
             'category_id' => 'required|exists:categories,id'
         ];
     }

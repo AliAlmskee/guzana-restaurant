@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Dish;
 use App\Http\Requests\DishRequest;
+use App\Http\Requests\UpdateDishRequest;
 use App\Http\Resources\DishResource;
+use App\Models\Dish;
 use App\Services\PhotoService;
 
 class DishController extends Controller
@@ -40,7 +41,7 @@ class DishController extends Controller
         return new DishResource($dish);
     }
 
-    public function update(DishRequest $request, Dish $dish)
+    public function update(UpdateDishRequest $request, Dish $dish)
     {
         $data = $request->validated();
 
