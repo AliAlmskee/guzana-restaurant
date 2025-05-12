@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateDishRequest;
 use App\Http\Resources\DishResource;
 use App\Models\Dish;
 use App\Services\PhotoService;
+use Illuminate\Http\Request;
 
 class DishController extends Controller
 {
@@ -17,9 +18,18 @@ class DishController extends Controller
         $this->photoService = $photoService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        return DishResource::collection(Dish::all());
+        $query = Dish::query();
+        
+        if ($request->has('category_id')) {
+            $query->where('category_id', $request->input('category_id'));
+        }
+        
+        return DishResource::collection(
+            $query->orderByRaw('CASE WHEN photo IS NULL OR photo = "" THEN 1 ELSE 0 END')
+                  ->get()
+        );
     }
 
     public function store(DishRequest $request)

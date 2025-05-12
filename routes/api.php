@@ -7,7 +7,6 @@ use App\Http\Controllers\DishController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\ContentController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
