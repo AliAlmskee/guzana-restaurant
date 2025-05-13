@@ -58,32 +58,43 @@ class OrderController extends Controller
                 400
             );
         }
-        $order->status = 'approved';
+        $order->status = 'Bestätigt';
         $order->save();
     
-        $subject = 'Reservierungsbestätigung – Guzana Restaurant'; 
+        $subject = 'Reservierungsbestätigung '; 
         $body = 'vielen Dank für Ihre Reservierung im Guzana Restaurant.
         Hiermit bestätigen wir Ihnen gerne Ihre Tischreservierung wie folgt: '; 
          $this->sendEmail($subject, $body, $order->user_email,$order);
 
-         return   response()->json(['message' => 'Order approved successfully'], 200);
+          return  response()->json(['message' => 'Order approved successfully'], 200);
     }
     
     public function denyOrder(Request $request, Order $order)
-    {
-        $validated = $request->validate([
-            'next_available_date' => 'required|date_format:Y-m-d H:i:s',
-        ]);
-    
-        $order->status = 'denied';
-        $order->save();
-    
-        $subject = 'Bestellung abgelehnt'; 
-        $body = "Ihre Bestellung wurde abgelehnt. Nächstes verfügbares Datum: {$validated['next_available_date']}"; 
-        $this->sendEmail($subject, $body, $order->user_email,$order);
-    
-        return response()->json(['message' => 'Order denied successfully'], 200);
-    }
+{
+    $validated = $request->validate([
+        'next_available_date' => 'required|date_format:Y-m-d H:i:s',
+    ]);
+
+    $order->status = 'Abgelehnt';
+    $order->save();
+
+    $reservationTime = $order->date;
+
+    $subject = 'Ihre Reservierungsanfrage'; 
+    $body =
+    "vielen Dank für Ihre Reservierungsanfrage um {$reservationTime} in unserem Restaurant.\n\n" .
+    "Leider müssen wir Ihnen mitteilen, dass wir zu diesem Zeitpunkt bereits vollständig ausgebucht sind und Ihre Reservierung daher nicht bestätigen können.\n\n" .
+    "Gerne möchten wir Ihnen stattdessen einen alternativen Termin anbieten: {$validated['next_available_date']}.\n\n" .
+    "Sollte dieser Termin für Sie nicht passend sein, können Sie uns gerne auf diese E-Mail antworten oder jederzeit bequem über unsere Website einen neuen Termin reservieren.
+
+    Falls der Termin für Sie passt, können Sie ihn ebenfalls ganz einfach per E-Mail bestätigen..";
+
+
+    $this->sendEmail($subject, $body, 'foxg4393@gmail.com', $order);
+
+    return response()->json(['message' => 'Order denied successfully'], 200);
+}
+
 
 
 }

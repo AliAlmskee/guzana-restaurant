@@ -60,14 +60,14 @@
         @if(isset($order))
         <div style="margin: 20px 0; padding: 15px; background: #f9f9f9; border-left: 4px solid #d4a762;">
             <h3>Bestelldetails:</h3>
-            <p><strong>Name:</strong> #{{ $order->user_name  }}</p>
-            <p><strong>Personen:</strong> #{{ $order->number_of_seats   }}</p>
+            <p><strong>Name:</strong> {{ $order->user_name  }}</p>
+            <p><strong>Personen:</strong> {{ $order->number_of_seats   }}</p>
             <p><strong>Datum:</strong> {{ $order->date }}</p>
             <p><strong>Status:</strong> {{ ucfirst($order->status) }}</p>
         </div>
         @endif
         
-        <p>Mit freundlichen Grüßen,<br>
+        <p>Mit freundlichen Grüßen <br>
         Ihr Guzana Restaurant Team</p>
     </div>
 

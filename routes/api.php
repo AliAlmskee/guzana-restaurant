@@ -37,6 +37,7 @@ use Illuminate\Support\Facades\Route;
         Route::post('/approve-order/{order}', [OrderController::class, 'approveOrder']);
         Route::post('/deny-order/{order}', [OrderController::class, 'denyOrder']);
         Route::post('/logout', [AuthController::class, 'logout']);
+        Route::post('/changepassword', [AuthController::class, 'changepassword']);
         Route::put('/content/{type}', [ContentController::class, 'updateContent']);
         Route::apiResource('categories', CategoryController::class)->only(['destroy', 'update', 'store']);;
         Route::apiResource('dishes', DishController::class)->only(['destroy', 'update', 'store']);
