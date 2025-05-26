@@ -40,5 +40,12 @@ class ContentTableSeeder extends Seeder
                 'de' => "Für Anfragen und Reservieren erreichen Sie uns telefonisch oder per E-Mail. Wir freuen uns darauf, Sie im Restaurant Guzana zu verwöhnen und Ihnen ein unvergessliches Erlebnis zu bieten.",
             ]]
         );
+        Content::updateOrCreate(
+            ['key' => 'FOOTER'],
+            ['translations' => [
+                'ar' => "معلومات الاتصال\nالهاتف: 0176 41512034\nالعنوان: مطعم غوزانا، شارع بفورتنر 13A، 07545 جيرا\nمطعم غوزانا. جميع الحقوق محفوظة.",
+                'de' => "Kontaktinformationen\nTelefon: 0176 41512034\nAdresse: Guzana Restaurant, Pfortener Straße 13A, 07545 Gera\nGuzana Restaurant. Alle Rechte vorbehalten.",
+            ]]
+        );
     }
 }

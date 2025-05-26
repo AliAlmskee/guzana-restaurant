@@ -25,6 +25,11 @@ class ContentController extends Controller
         return new ContentResource($content);
     }
 
+    public function footer(Request $request)
+    {
+        return $this->getContent($request, 'FOOTER');
+    }
+
     // Admin method to update content
     public function updateContent(Request $request, string $type)
     {

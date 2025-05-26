@@ -24,6 +24,8 @@ use Illuminate\Support\Facades\Route;
         Route::apiResource('dishes', DishController::class)->only(['index', 'show']);
         Route::get('/about', [ContentController::class, 'about']);
         Route::get('/menu', [ContentController::class, 'menu']);
+        Route::get('/footer', [ContentController::class, 'footer']);
+
     }); 
 
 

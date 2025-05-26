@@ -16,13 +16,21 @@ class OrderController extends Controller
     {
         $status = $request->query('status', 'pending');
     
-        $orders = Order::where('status', $status)
-                      ->where('created_at', '>=', Carbon::now()->subDays(30))
-                      ->orderBy('created_at', 'desc')
-                      ->paginate(20);    
-                      
+        if ($status == 'Bestätigt') {
+            $orders = Order::where('status', $status)
+                           ->where('created_at', '>=', Carbon::now()->subDays(30))
+                           ->orderBy('created_at', 'asc')
+                           ->paginate(20);   
+        } else {
+            $orders = Order::where('status', $status)
+                           ->where('created_at', '>=', Carbon::now()->subDays(30))
+                           ->orderBy('created_at', 'desc')
+                           ->paginate(20);    
+        }
+    
         return OrderResource::collection($orders);
     }
+    
     public function store(OrderRequest $request)
     { 
         $data = $request->validated();
